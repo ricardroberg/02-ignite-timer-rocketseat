@@ -1,13 +1,47 @@
 import { Play } from 'phosphor-react'
-import { CountdownContainer, FormContainer, HomeContainer, MinutesAmountInput, Separator, StartCountdownButton, TaskInput } from './styles'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import * as zod from 'zod'
+
+
+import {
+    CountdownContainer,
+    FormContainer,
+    HomeContainer,
+    MinutesAmountInput,
+    Separator,
+    StartCountdownButton,
+    TaskInput
+} from './styles'
+
+const newCycleFormValidationSchema = zod.object({
+    task: zod.string().min(1, "Inform the task"),
+    minutesAmount: zod.number().min(5, 'Min interval 5min').max(120, 'Max interval 60min')
+})
 
 export function Home() {
+    const { register, handleSubmit, watch } = useForm({
+        resolver: zodResolver(newCycleFormValidationSchema),
+    })
+
+    function handleCreateNewCycle(data: any) {
+        console.log(data)
+    }
+
+    const task = watch('task')
+    const isSubmitDisabled = !task
+
     return (
         <HomeContainer>
-            <form action="">
+            <form onSubmit={handleSubmit(handleCreateNewCycle)} action="">
                 <FormContainer>
                     <label htmlFor="">Begin work on</label>
-                    <TaskInput id="task" list='task-suggestions' placeholder='Give a name to your task' />
+                    <TaskInput
+                        id="task"
+                        list='task-suggestions'
+                        placeholder='Give a name to your task'
+                        {...register('task')}
+                    />
                     <datalist id="task-suggestions">
                         <option value="Study language" />
                         <option value="Study tests " />
@@ -16,7 +50,15 @@ export function Home() {
                         <option value="Mind and Body" />
                     </datalist>
                     <label htmlFor="">over</label>
-                    <MinutesAmountInput type='number' id="minutesAmount" placeholder='00' step={5} min={5} max={60} />
+                    <MinutesAmountInput
+                        type='number'
+                        id="minutesAmount"
+                        placeholder='00'
+                        step={5}
+                        min={5}
+                        max={60}
+                        {...register('minutesAmount', { valueAsNumber: true })}
+                    />
 
                     <span>minutes</span>
                 </FormContainer>
@@ -28,7 +70,10 @@ export function Home() {
                     <span>0</span>
 
                 </CountdownContainer>
-                <StartCountdownButton type="submit" disabled>
+                <StartCountdownButton
+                    type="submit"
+                    disabled={isSubmitDisabled}
+                >
                     <Play size={24} />Start
                 </StartCountdownButton>
             </form>

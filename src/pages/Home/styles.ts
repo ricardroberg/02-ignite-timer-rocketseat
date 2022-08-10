@@ -80,7 +80,7 @@ export const CountdownContainer = styled.div`
 `;
 
 export const Separator = styled.div`
-  /* font-family: "Roboto Mono", monospace; */
+  font-family: "Roboto Mono", monospace;
   padding: 2rem 0;
   color: ${(props) => props.theme["green-500"]};
 

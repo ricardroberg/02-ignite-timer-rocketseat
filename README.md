@@ -135,6 +135,7 @@ This must be done for every default layout created
     <Route path="/accounts" element={<Accounts />} />
 </Routes>
 ```
+
 When using a object related to any value with specific value, they will be identified as 'string' and may return a typo error.
 
 ```tsx
@@ -143,6 +144,39 @@ const STATUS_COLOR = {
   red: "red-500",
   green: "green-500",
 } as const;
-
 ```
+
 using 'as const' mean that the keys MUST be those values and not any string, and those values MUST exist on the inferred place
+
+## Part III
+
+### Forms
+
+//controlled - keep the user input inside a state every time a change is made
+
+//uncontrolled - get the input information only when needed
+
+npm i react-hook-form
+
+```tsx
+function register(name: string){
+  return {
+    input methods (onChange, onBlur, onFocus)
+  }
+}
+```
+
+Complementary variables
+
+```js
+const task = watch("task");
+const isSubmitDisabled = !task;
+```
+
+## Another way to validade forms
+
+=> ZOD
+<link src='https://github.com/colinhacks/zod'>https://github.com/colinhacks/zod</link>
+
+npm i zod
+npm i @hookform/resolvers ( to integrate Zod with React Hook Forms)
