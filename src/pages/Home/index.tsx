@@ -16,16 +16,33 @@ import {
 
 const newCycleFormValidationSchema = zod.object({
     task: zod.string().min(1, "Inform the task"),
-    minutesAmount: zod.number().min(5, 'Min interval 5min').max(120, 'Max interval 60min')
+    minutesAmount: zod
+        .number()
+        .min(5, 'Min interval 5min')
+        .max(120, 'Max interval 60min')
 })
 
+// Define validation object
+// interface NewCycleFormData {
+//     task: string
+//     minutesAmount: number
+// }
+
+// Create a Tipo from another reference/variable
+type NewCycleFormData = zod.infer<typeof newCycleFormValidationSchema>
+
 export function Home() {
-    const { register, handleSubmit, watch } = useForm({
+    const { register, handleSubmit, watch, reset } = useForm<NewCycleFormData>({
         resolver: zodResolver(newCycleFormValidationSchema),
+        defaultValues: {
+            task: '',
+            minutesAmount: 0,
+        }
     })
 
-    function handleCreateNewCycle(data: any) {
+    function handleCreateNewCycle(data: NewCycleFormData) {
         console.log(data)
+        reset()
     }
 
     const task = watch('task')

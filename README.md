@@ -180,3 +180,18 @@ const isSubmitDisabled = !task;
 
 npm i zod
 npm i @hookform/resolvers ( to integrate Zod with React Hook Forms)
+
+## Interface vs Type
+
+```tsx
+// Define validation object
+interface NewCycleFormData {
+    task: string
+    minutesAmount: number
+}
+
+// Create a Tipo from another reference/variable
+// If add a new attrib to newCycleFormValidationSchema it will be automaticaly set to NewCycleFormData without the need to keep addint to interface
+type NewCycleFormData = zod.infer<typeof newCycleFormValidationSchema>
+
+```
