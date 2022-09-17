@@ -323,3 +323,8 @@ function markCurrentCycleAsFinished() {
 ```
 
 ..as a beacon to add, interrupt, mark as finished...
+
+## Using enum to define type
+
+## Immer library - to work with immutable data/variables as normal
+npm i immer
