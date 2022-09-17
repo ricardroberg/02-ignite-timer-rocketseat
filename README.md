@@ -4,9 +4,14 @@
 
 ### Styled Components
 
+#### Typescript Error Translator
+
+https://ts-error-translator.vercel.app/
+
 ```
 npm i styled-components
 npm i @types/styled-components -D
+npm i date-fns
 ```
 
 Create components with specific styled CSS
@@ -176,6 +181,7 @@ const isSubmitDisabled = !task;
 ## Another way to validade forms
 
 => ZOD
+
 <link src='https://github.com/colinhacks/zod'>https://github.com/colinhacks/zod</link>
 
 npm i zod
@@ -186,12 +192,134 @@ npm i @hookform/resolvers ( to integrate Zod with React Hook Forms)
 ```tsx
 // Define validation object
 interface NewCycleFormData {
-    task: string
-    minutesAmount: number
+  task: string;
+  minutesAmount: number;
 }
 
 // Create a Tipo from another reference/variable
 // If add a new attrib to newCycleFormValidationSchema it will be automaticaly set to NewCycleFormData without the need to keep addint to interface
-type NewCycleFormData = zod.infer<typeof newCycleFormValidationSchema>
+type NewCycleFormData = zod.infer<typeof newCycleFormValidationSchema>;
+```
+
+## A Tip about useEffect
+
+It will run at least once when the component is renderized. If a variable is passed then it will execute every time the variable changes.
+
+```tsx
+//Example 1 - listen 'list' variable
+useEffect(() => {
+  // what to execute
+}, [list]);
+
+// Example 2 - run once. No variable.
+useEffect(() => {
+  fetch("https://api.github.com/users/ricardroberg/repos")
+    .then((response) => response.json())
+    .then((data) => {
+      setList(data.map((item: any) => item.full_name));
+    });
+}, []); // no variable
+```
+
+- Carefull when use it with onChange
+
+## Not using setTimeOut to countdown seconds.
+
+### Use Date() task was created minus actual Date()
+
+Usinf npm i date-fns and the library differenceInSeconds to calculate date differece in seconds
+
+## Prop Drilling -> When there are TOO MANY properties JUST for communication between components
+
+# SOLLUTION
+
+## Context API -> Allow share information between many components at once
+
+# USECONTEXT
+
+### In the components that wrapp the components that you wanna share properties, you need to create a CONTEXT:
+
+```tsx
+
+const ContextContainer = createContext({
+  oneContext,
+  setOneContext,
+  otherContext,
+  soOnAndSoForth
+  }:<type>)
+
+export function MainContainer(){
+  const [oneContext, setOneContext] = useState(0)
+  return (
+    <div>
+      <InsideComponent/>
+    </div>
+  )
+}
 
 ```
+
+### On the inside components, you must declare a constant with `useContext` to use the context.
+
+```tsx
+export function InsideComponent() {
+  const { oneContext, setOneContext, soOnAndSoForth } =
+    useContext(ContextContainer);
+
+  return (
+    <h1>
+      Using Context: {oneContext}
+      <button
+        onClick={() => {
+          setOneContext(oneContext + 1);
+        }}
+      >
+        Changing Context
+      </button>
+    </h1>
+  );
+}
+```
+
+## useReducer (react state components)
+
+Used to manipulate/store more complex imformation of a state in a more verbose way
+useReducer takes two(three maybe) params
+1 - function
+2 - state tart value
+
+```tsx
+const [cycles, dispatch] = useReducer((state: Cycle[], action: any) => {
+  // state -> up to date value
+  // action -> action to be take to change state
+
+  if (action.type === "ADD_NEW_CYCLE") {
+    return [...state, action.payload.newCycle];
+  }
+
+  return state;
+}, []);
+// state -> up to date value
+// action -> action to be take to change state
+
+// NEW USE
+function markCurrentCycleAsFinished() {
+  dispatch({
+    type: "MARK_CURRENT_CYCLE_AS_FINISHED",
+    payload: {
+      activeCycleId,
+    },
+  });
+
+  // setCycles(state => state.map((cycle) => {
+  //     if (cycle.id === activeCycleId) {
+  //         return { ...cycle, finishedDate: new Date() }
+  //     } else {
+  //         return cycle
+  //     }
+  // })
+  // )
+}
+```
+
+..as a beacon to add, interrupt, mark as finished...
